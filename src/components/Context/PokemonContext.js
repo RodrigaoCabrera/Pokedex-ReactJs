@@ -1,5 +1,4 @@
-import React, { useState, useReducer, useMemo } from 'react';
-import PokemonReducer from './PokemonReducer'
+import React, { useState, useMemo } from 'react';
 
 const PokemonContext = React.createContext();
 
@@ -11,6 +10,30 @@ export function PokemonProvider(props) {
     const [totalPage, setTotalPage] = useState(0);
     const [favoritsPokemons, setFavoritsPokemons] = useState([]);
     const [isViewFavorits, setIsViewFavorits] = useState(false);
+
+    const typePokemonColor = (pokemon) => {
+        const color = pokemon.types.map((type) => {
+            switch (type.type.name) {
+                case "grass":
+                    return "bg-success";
+                case "fire":
+                    return "bg-danger";
+                case "water":
+                    return "bg-primary";
+                case "electric":
+                    return "bg-primary";
+                case "poison":
+                    return "bg-warning";
+                case "flying":
+                    return "bg-info";
+                case "bug":
+                    return "bg-secondary";
+                default:
+                    return "bg-white";
+            }
+        });
+        return color;
+    };
 
     const ObtenerPokemones = async () => {
         setNotFound(false);
@@ -30,7 +53,35 @@ export function PokemonProvider(props) {
 
     };
 
-   
+    const favorits = (namePokemon) => {
+        const isFavorit = favoritsPokemons.some(
+            (pokemon) => pokemon.name === namePokemon
+        );
+        if (!isFavorit) {
+            const favorit = pokemones.filter(
+                (pokemon) => pokemon.name === namePokemon
+            );
+            setFavoritsPokemons([...favoritsPokemons, ...favorit]);
+        } else {
+            const favorit = favoritsPokemons.filter(
+                (pokemon) => pokemon.name !== namePokemon
+            );
+            setFavoritsPokemons(favorit);
+        }
+    };
+
+    const redHeart = "❤️";
+    const whiteHeart = "♡";
+
+
+    const heart = (Pokename) => {
+        return (
+            favoritsPokemons.some((p) => p.name === Pokename)
+                ? redHeart
+                : whiteHeart
+        )
+    };
+
 
     const value = useMemo(() => {
         return ({
@@ -48,11 +99,14 @@ export function PokemonProvider(props) {
             favoritsPokemons,
             setFavoritsPokemons,
             isViewFavorits,
-            setIsViewFavorits
+            setIsViewFavorits,
+            typePokemonColor,
+            favorits,
+            heart
         })
     }, [page, totalPage, isSearching, notFound, favoritsPokemons, isViewFavorits]);
 
-    
+
 
     return (
         <PokemonContext.Provider value={value} {...props}

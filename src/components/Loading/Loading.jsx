@@ -1,4 +1,4 @@
-import React, { Spinner } from "reactstrap";
+import React from "reactstrap";
 
 const Loading = () => {
   return (

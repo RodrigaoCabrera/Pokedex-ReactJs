@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Header/Navbar';
 import SearchBar from './components/Main/SearchBar';
 import Pokedex from './components/Main/Pokedex/Pokedex';
@@ -9,25 +9,26 @@ import PokemonsFavorits from './components/Main/Pokedex/PokemonsFavorits';
 export default () => <PokemonProvider><App></App></PokemonProvider>
 
 function App() {
-  
 
-  const { page, 
+
+  const { page,
     pokemones,
-    setPokemones, 
+    setPokemones,
     ObtenerPokemones,
     notFound,
     setNotFound,
     isSearching,
     setIsSearching,
-    isViewFavorits} = usePokemon();
+    isViewFavorits } = usePokemon();
 
-  
+
   useEffect(() => {
     ObtenerPokemones();
   }, [page]);
 
   const searchPokemon = async (pokemon) => {
     setIsSearching(true);
+
     if (pokemon) {
       const url = "https://pokeapi.co/api/v2/pokemon/";
       const response = await fetch(url + pokemon);
@@ -45,20 +46,23 @@ function App() {
   }
 
   return (
-    <div className="App bg-primary d-flex flex-column">
-      <Navbar />
-      <SearchBar searchPokemon={searchPokemon} />
-      {
-        notFound ?
-          <div className="bg-warning p-5">No se encontraron resultados</div>
-          :
-          <Pokedex pokemones={pokemones} isSearching={isSearching} />
-      }
-      {
-        isViewFavorits && <PokemonsFavorits />
-      }
-      
-    </div>
+    isViewFavorits ?
+      <div className="d-flex justify-content-center items-content-center lead">
+        <PokemonsFavorits />
+      </div>
+      :
+
+      <div className="lead">
+        <Navbar />
+        <SearchBar searchPokemon={searchPokemon} />
+        {
+          notFound ?
+            <div className="text-warning p-5 h4">No se encontraron resultados</div>
+            :
+            <Pokedex pokemones={pokemones} isSearching={isSearching} />
+        }
+
+      </div>
 
   );
 };

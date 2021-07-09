@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { usePokemon } from "../Context/PokemonContext";
 
 const SearchBar = ({ searchPokemon }) => {
   const [pokemon, setPokemon] = useState();
-  
+
+  const { setNotFound } = usePokemon();
+
   const inputPokemons = (e) => {
     if (e.target.value.length === 0) {
       searchPokemon(null);
@@ -13,6 +16,7 @@ const SearchBar = ({ searchPokemon }) => {
   };
 
   const search = () => {
+    setNotFound(false);
     searchPokemon(pokemon);
   };
 
